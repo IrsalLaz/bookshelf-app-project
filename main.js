@@ -32,6 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.addEventListener(SAVED_EVENT, function () {
 		console.log("Books are saved");
 	});
+
+	// load data from local storage
+	if (isStorageExist) {
+		loadBookList();
+	}
 });
 
 function addTodo() {
@@ -68,13 +73,23 @@ function generateBookObject(id, title, author, year, isComplete) {
 	};
 }
 
+function isStorageExist() {
+	if (typeof Storage === undefined) {
+		alert("Browser anda tidak mendukung Web Storage");
+		return false;
+	}
+	return true;
+}
+
 function saveData() {
-	document.dispatchEvent(new Event(RENDER_EVENT));
+	if (isStorageExist) {
+		document.dispatchEvent(new Event(RENDER_EVENT));
 
-	const parsed = JSON.stringify(books);
-	localStorage.setItem(BOOKS_KEY, parsed);
+		const parsed = JSON.stringify(books);
+		localStorage.setItem(BOOKS_KEY, parsed);
 
-	document.dispatchEvent(new Event(SAVED_EVENT));
+		document.dispatchEvent(new Event(SAVED_EVENT));
+	}
 }
 
 function makeBook(book) {
@@ -82,15 +97,104 @@ function makeBook(book) {
 	bookElement.setAttribute("data-bookid", book.id);
 	bookElement.setAttribute("data-testid", "bookItem");
 
-	bookElement.innerHTML = `
-			<h3 data-testid="bookItemTitle">${book.title}</h3>
-            <p data-testid="bookItemAuthor">Penulis: ${book.author}</p>
-            <p data-testid="bookItemYear">Tahun: ${book.year}</p>
-            <div>
-              <button data-testid="bookItemIsCompleteButton">Selesai dibaca</button>
-              <button data-testid="bookItemDeleteButton">Hapus Buku</button>
-              <button data-testid="bookItemEditButton">Edit Buku</button>
-            </div>	
-	`;
+	const title = document.createElement("h3");
+	title.setAttribute("data-testid", "bookItemTitle");
+	title.innerText = book.title;
+
+	const author = document.createElement("p");
+	author.setAttribute("data-testid", "bookItemAuthor");
+	author.innerText = `Penulis: ${book.author}`;
+
+	const year = document.createElement("p");
+	year.setAttribute("data-testid", "bookItemYear");
+	year.innerText = `Tahun: ${book.year}`;
+
+	bookElement.append(title, author, year);
+
+	const isCompleteBtn = document.createElement("button");
+	isCompleteBtn.setAttribute("data-testid", "bookItemIsCompleteButton");
+	isCompleteBtn.innerText = "Selesai dibaca";
+
+	const deleteBtn = document.createElement("button");
+	deleteBtn.setAttribute("data-testid", "bookItemDeleteButton");
+	deleteBtn.innerText = "Hapus Buku";
+
+	const editBtn = document.createElement("button");
+	editBtn.setAttribute("data-testid", "bookItemEditButton");
+	editBtn.innerText = "Edit Buku";
+
+	// setup status changes event
+	isCompleteBtn.addEventListener("click", function () {
+		changeCompleteStatus(book.id);
+	});
+
+	// setup delete book event
+	deleteBtn.addEventListener("click", function () {
+		deleteBook(book.id);
+	});
+
+	editBtn.addEventListener("click", function () {
+		editBook();
+	});
+
+	if (book.isComplete) {
+		isCompleteBtn.innerText = "Belum Selesai Membaca";
+		bookElement.append(title, author, year, isCompleteBtn, deleteBtn, editBtn);
+	} else {
+		bookElement.append(title, author, year, isCompleteBtn, deleteBtn, editBtn);
+	}
+
 	return bookElement;
+}
+
+function loadBookList() {
+	const bookData = localStorage.getItem(BOOKS_KEY);
+	const bookList = JSON.parse(bookData);
+
+	if (bookList !== null) {
+		for (const book of bookList) {
+			books.push(book);
+		}
+	}
+
+	document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function changeCompleteStatus(bookId) {
+	const targetBook = findBook(bookId);
+
+	if (targetBook == null) {
+		return;
+	} else if (targetBook.isComplete == false) {
+		targetBook.isComplete = true;
+	} else {
+		targetBook.isComplete = false;
+	}
+
+	saveData();
+	document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function findBook(bookId) {
+	for (const bookItem of books) {
+		if (bookItem.id == bookId) {
+			return bookItem;
+		}
+	}
+	return null;
+}
+
+function deleteBook(bookId) {
+	const targetBook = findBook(bookId);
+
+	if (targetBook == null) {
+		return;
+	}
+
+	// delete from array
+	books.splice(targetBook, 1);
+
+	// save and render new data
+	saveData();
+	document.dispatchEvent(new Event(RENDER_EVENT));
 }
