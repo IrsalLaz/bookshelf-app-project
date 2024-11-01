@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// setup customize render event
 	document.addEventListener(RENDER_EVENT, function () {
+		document.getElementById("bookForm").reset();
+
 		const incompleteBookList = document.getElementById("incompleteBookList");
 		incompleteBookList.innerHTML = "";
 		const completeBookList = document.getElementById("completeBookList");
@@ -251,13 +253,19 @@ function editBook(bookId) {
 		const newYear = document.getElementById("bookFormYear").value;
 		const newIsComplete = document.getElementById("bookFormIsComplete").checked;
 
-		targetBook.title = newTitle;
-		targetBook.author = newAuthor;
-		targetBook.year = newYear;
-		targetBook.isComplete = newIsComplete;
+		const indexBook = books.indexOf(targetBook);
+		if (indexBook !== -1) {
+			books[indexBook] = generateBookObject(
+				targetBook.id,
+				newTitle,
+				newAuthor,
+				newYear,
+				newIsComplete
+			);
+		}
 
 		showEditBtnGroup(false);
-		document.dispatchEvent(new Event(RENDER_EVENT));
+		saveData();
 	});
 }
 
