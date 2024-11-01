@@ -37,6 +37,28 @@ document.addEventListener("DOMContentLoaded", function () {
 	if (isStorageExist) {
 		loadBookList();
 	}
+
+	// cancel edit button
+	const cancelBtn = document.getElementById("cancelBtn");
+	cancelBtn.addEventListener("click", function () {
+		document.getElementById("bookForm").reset();
+		showEditBtnGroup(false);
+	});
+
+	// search event
+	const searchBook = document.getElementById("searchBook");
+	searchBook.addEventListener("submit", function (event) {
+		event.preventDefault();
+		renderFindingBook();
+	});
+
+	// reset view
+	const resetViewBtn = document.getElementById("resetViewBtn");
+	resetViewBtn.addEventListener("click", function (event) {
+		event.preventDefault();
+		document.dispatchEvent(new Event(RENDER_EVENT));
+		resetViewBtn.setAttribute("hidden", "");
+	});
 });
 
 function addTodo() {
@@ -121,7 +143,7 @@ function makeBook(book) {
 
 	const editBtn = document.createElement("button");
 	editBtn.setAttribute("data-testid", "bookItemEditButton");
-	editBtn.innerText = "Edit Buku";
+	editBtn.innerText = "Perbarui Buku";
 
 	// setup status changes event
 	isCompleteBtn.addEventListener("click", function () {
@@ -133,8 +155,10 @@ function makeBook(book) {
 		deleteBook(book.id);
 	});
 
+	// setup edit event
 	editBtn.addEventListener("click", function () {
-		editBook();
+		editBook(book.id);
+		showEditBtnGroup(true);
 	});
 
 	if (book.isComplete) {
@@ -197,4 +221,81 @@ function deleteBook(bookId) {
 	// save and render new data
 	saveData();
 	document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function editBook(bookId) {
+	const targetBook = findBook(bookId);
+
+	if (targetBook == null) {
+		return;
+	}
+
+	// get element and append books data to input field
+	const titleInput = document.getElementById("bookFormTitle");
+	const authorInput = document.getElementById("bookFormAuthor");
+	const yearInput = document.getElementById("bookFormYear");
+	const isComplete = document.getElementById("bookFormIsComplete");
+
+	titleInput.value = targetBook.title;
+	authorInput.value = targetBook.author;
+	yearInput.value = targetBook.year;
+
+	if (targetBook.isComplete) {
+		isComplete.setAttribute("checked", "");
+	}
+
+	const bookFormEdit = document.getElementById("bookFormEdit");
+	bookFormEdit.addEventListener("click", function () {
+		const newTitle = document.getElementById("bookFormTitle").value;
+		const newAuthor = document.getElementById("bookFormAuthor").value;
+		const newYear = document.getElementById("bookFormYear").value;
+		const newIsComplete = document.getElementById("bookFormIsComplete").checked;
+
+		targetBook.title = newTitle;
+		targetBook.author = newAuthor;
+		targetBook.year = newYear;
+		targetBook.isComplete = newIsComplete;
+
+		showEditBtnGroup(false);
+		document.dispatchEvent(new Event(RENDER_EVENT));
+	});
+}
+
+function showEditBtnGroup(isEdit) {
+	if (isEdit) {
+		document.getElementById("bookFormSubmit").setAttribute("hidden", "");
+		document.getElementById("bookFormEdit").removeAttribute("hidden");
+		document.getElementById("cancelBtn").removeAttribute("hidden");
+	} else {
+		document.getElementById("bookFormSubmit").removeAttribute("hidden");
+		document.getElementById("bookFormEdit").setAttribute("hidden", "");
+		document.getElementById("cancelBtn").setAttribute("hidden", "");
+	}
+}
+
+function renderFindingBook() {
+	const keyword = document
+		.getElementById("searchBookTitle")
+		.value.toLowerCase();
+
+	if (keyword != "") {
+		const incompleteBookList = document.getElementById("incompleteBookList");
+		incompleteBookList.innerHTML = "";
+		const completeBookList = document.getElementById("completeBookList");
+		completeBookList.innerHTML = "";
+
+		for (const book of books) {
+			if (book.title.toLowerCase().includes(keyword)) {
+				// render list book
+				const bookElement = makeBook(book);
+
+				if (!book.isComplete) {
+					incompleteBookList.append(bookElement);
+				} else {
+					completeBookList.append(bookElement);
+				}
+			}
+		}
+		document.getElementById("resetViewBtn").removeAttribute("hidden");
+	}
 }
