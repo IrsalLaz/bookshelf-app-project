@@ -1,6 +1,5 @@
 const books = [];
 const RENDER_EVENT = "render_books";
-const SAVED_EVENT = "saved_books";
 const BOOKS_KEY = "books_list";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -28,11 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				completeBookList.append(bookElement);
 			}
 		}
-	});
-
-	// setup customize saved event
-	document.addEventListener(SAVED_EVENT, function () {
-		console.log("Books are saved");
 	});
 
 	// load data from local storage
@@ -111,8 +105,6 @@ function saveData() {
 
 		const parsed = JSON.stringify(books);
 		localStorage.setItem(BOOKS_KEY, parsed);
-
-		document.dispatchEvent(new Event(SAVED_EVENT));
 	}
 }
 
