@@ -68,7 +68,7 @@ function addBook() {
 		generateID,
 		title,
 		author,
-		year,
+		Number(year),
 		isComplete
 	);
 
