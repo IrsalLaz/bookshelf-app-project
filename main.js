@@ -6,13 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	const submitBooksForm = document.getElementById("bookForm");
 	submitBooksForm.addEventListener("submit", function (event) {
 		event.preventDefault();
-		addTodo();
+		addBook();
 	});
 
 	// setup customize render event
 	document.addEventListener(RENDER_EVENT, function () {
-		document.getElementById("bookForm").reset();
-
 		const incompleteBookList = document.getElementById("incompleteBookList");
 		incompleteBookList.innerHTML = "";
 		const completeBookList = document.getElementById("completeBookList");
@@ -38,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	const cancelBtn = document.getElementById("cancelBtn");
 	cancelBtn.addEventListener("click", function () {
 		document.getElementById("bookForm").reset();
+		document.getElementById("bookFormIsComplete").checked = false;
+
 		showEditBtnGroup(false);
 	});
 
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 });
 
-function addTodo() {
+function addBook() {
 	const title = document.getElementById("bookFormTitle").value;
 	const author = document.getElementById("bookFormAuthor").value;
 	const year = document.getElementById("bookFormYear").value;
@@ -101,10 +101,11 @@ function isStorageExist() {
 
 function saveData() {
 	if (isStorageExist) {
-		document.dispatchEvent(new Event(RENDER_EVENT));
-
 		const parsed = JSON.stringify(books);
 		localStorage.setItem(BOOKS_KEY, parsed);
+
+		document.dispatchEvent(new Event(RENDER_EVENT));
+		console.log("data is saved");
 	}
 }
 
@@ -243,21 +244,15 @@ function editBook(bookId) {
 		const newTitle = document.getElementById("bookFormTitle").value;
 		const newAuthor = document.getElementById("bookFormAuthor").value;
 		const newYear = document.getElementById("bookFormYear").value;
-		const newIsComplete = document.getElementById("bookFormIsComplete").checked;
+		const isComplete = document.getElementById("bookFormIsComplete").checked;
 
-		const indexBook = books.indexOf(targetBook);
-		if (indexBook !== -1) {
-			books[indexBook] = generateBookObject(
-				targetBook.id,
-				newTitle,
-				newAuthor,
-				newYear,
-				newIsComplete
-			);
-		}
+		targetBook.title = newTitle;
+		targetBook.author = newAuthor;
+		targetBook.year = newYear;
+		targetBook.isComplete = isComplete;
 
-		showEditBtnGroup(false);
 		saveData();
+		showEditBtnGroup(false);
 	});
 }
 
