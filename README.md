@@ -1,38 +1,42 @@
-# Bookshelf App Starter Project
+# Bookshelf App
 
-Ini adalah starter project untuk siswa yang sedang mengerjakan tugas akhir kelas Belajar Membuat Front-End Web untuk Pemula.
+The Bookshelf App is a simple web application designed to help users manage a collection of books. Users can add, edit, delete, search, and categorize books as "Belum selesai dibaca" (Not Finished Reading) or "Selesai dibaca" (Finished Reading).
 
-## Ketentuan Pengerjaan Tugas
+## Features
 
-Untuk mempermudah penilaian submission yang dikirim, Anda perlu memahami ketentuan-ketentuan berikut dalam mengerjakan tugas ini.
+- **Add Books**: Users can add new books with details including title, author, year of release, and completion status.
+- **Edit Books**: Users can edit the details of existing books.
+- **Delete Books**: Users can remove books from their collection.
+- **Search Books**: Users can search for books by title.
+- **Categorization**: Books can be marked as "Selesai dibaca" or "Belum selesai dibaca".
 
-- Anda dilarang mengedit atau menghapus atribut `data-testid` pada elemen-elemen HTML.
-- Ini masih berkaitan dengan poin sebelumnya. Jika Anda memiliki kebutuhan seperti styling elemen dan perlu menambahkan atribut seperti class, itu tidak dilarang selama atribut `data-testid` beserta nilainya tidak diubah atau dihapus.
-- Dalam menampilkan data-data buku, Anda wajib memberikan beberapa atribut pada setiap elemennya.
+## Application Structure
 
-  - `data-bookid`: menampung nilai ID masing-masing buku.
-  - `data-testid`: penanda jenis data buku yang ditampilkan. Berikut daftarnya.
-    - `bookItem`: elemen kontainer yang menampung data-data buku.
-    - `bookItemTitle`: judul buku
-    - `bookItemAuthor`: penulis buku
-    - `bookItemYear`: tahun rilis buku
-    - `bookItemIsCompleteButton`: tombol untuk mengubah kondisi buku dari “Belum selesai dibaca” menjadi “Selesai dibaca” atau sebaliknya.
-    - `bookItemDeleteButton`: tombol untuk menghapus buku.
-    - `bookItemEditButton`: tombol untuk mengubah data buku.
+- **HTML**: The main structure of the app, including forms and sections for displaying books.
+- **CSS**: Styling for the application.
+- **JavaScript**: Handles the logic for adding, editing, deleting, searching, and categorizing books. It also manages data persistence using the browser's local storage.
 
-  Agar pengerjaan tugas lebih mudah, Anda dapat mengikuti templat buku berikut.
+## Data Attributes
 
-```html
-<div data-bookid="{{ ID_buku }}" data-testid="bookItem">
-  <h3 data-testid="bookItemTitle">{{ judul_buku }}</h3>
-  <p data-testid="bookItemAuthor">Penulis: {{ penulis_buku }}</p>
-  <p data-testid="bookItemYear">Tahun: {{ tahun_rilis_buku }}</p>
-  <div>
-    <button data-testid="bookItemIsCompleteButton">{{ tombol_untuk_ubah_kondisi }}</button>
-    <button data-testid="bookItemDeleteButton">{{ tombol_untuk_hapus }}</button>
-    <button data-testid="bookItemEditButton">{{ tombol_untuk_edit }}</button>
-  </div>
-</div>
-```
+To ensure the application functions correctly, certain data attributes are used:
+- `data-bookid`: Stores the unique ID of each book.
+- `data-testid`: Used for identifying specific elements in the application, such as book items and buttons.
 
-Selamat mengerjakan dan sukses selalu!
+## Usage
+
+1. **Adding a Book**: Fill in the book details in the provided form and click the "Masukkan Buku ke rak" button.
+2. **Editing a Book**: Click the "Perbarui Buku" button next to a book to edit its details.
+3. **Deleting a Book**: Click the "Hapus Buku" button next to a book to remove it from the list.
+4. **Searching for a Book**: Use the search form to find books by title.
+5. **Changing Book Status**: Use the "Selesai dibaca" button to toggle a book's completion status.
+
+## Local Storage
+
+The application uses local storage to persist book data across sessions. Ensure that your browser supports Web Storage for optimal functionality.
+
+## Getting Started
+
+1. Clone the repository.
+2. Open `index.html` in your browser to start using the app.
+
+Enjoy managing your bookshelf with ease!
