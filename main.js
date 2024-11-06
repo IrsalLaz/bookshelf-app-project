@@ -211,7 +211,7 @@ function deleteBook(bookId) {
 	}
 
 	// delete from array
-	books.splice(targetBook, 1);
+	books.splice(books.indexOf(targetBook), 1);
 
 	// save and render new data
 	saveData();
