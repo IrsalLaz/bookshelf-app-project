@@ -1,6 +1,8 @@
 # Bookshelf App
 
-The Bookshelf App is a simple web application designed to help users manage a collection of books. Users can add, edit, delete, search, and categorize books as "Belum selesai dibaca" (Not Finished Reading) or "Selesai dibaca" (Finished Reading).
+The Bookshelf App is a simple web application designed to help users manage a collection of books. Users can add, edit, delete, search, and categorize books as "Belum selesai dibaca" (Not Finished Reading) or "Selesai dibaca" (Finished Reading). The data will be saved to the browser's local storage for persistence.
+
+Access it online at [https://irsallaz.github.io/bookshelf-app-project/]
 
 ## Features
 
@@ -19,6 +21,7 @@ The Bookshelf App is a simple web application designed to help users manage a co
 ## Data Attributes
 
 To ensure the application functions correctly, certain data attributes are used:
+
 - `data-bookid`: Stores the unique ID of each book.
 - `data-testid`: Used for identifying specific elements in the application, such as book items and buttons.
 
